@@ -24,10 +24,11 @@
 ## Скриншоты
 
 <p align="center">
-  <img src="docs/admin_panel.png" alt="Админ-панель" width="350" style="margin: 0 10px;"/>
-  <img src="docs/platform.png" alt="Основная платформа" width="350" style="margin: 0 10px;"/>
-  <img src="docs/tg_bot.png" alt="Telegram-бот" width="350" style="margin: 0 10px;"/>
+  <img src="https://github.com/user-attachments/assets/c59cb4b9-cb21-45dd-930d-af50b40fd043" alt="Админ-панель" width="350" style="margin: 0 10px;"/>
+  <img src="https://github.com/user-attachments/assets/a1c8cdec-f9a6-4abf-a7f2-901553732146" alt="Основная платформа" width="350" style="margin: 0 10px;"/>
+  <img src="https://github.com/user-attachments/assets/4259f8ca-f905-42a6-9124-87869b420f15" alt="Telegram-бот" width="350" style="margin: 0 10px;"/>
 </p>
+
 
 <p align="center">
   <b>Админ-панель</b> &nbsp;&nbsp;&nbsp;&nbsp; <b>Основная платформа</b> &nbsp;&nbsp;&nbsp;&nbsp; <b>Telegram-бот</b>
