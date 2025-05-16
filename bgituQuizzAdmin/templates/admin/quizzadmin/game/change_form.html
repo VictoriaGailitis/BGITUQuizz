@@ -1,0 +1,69 @@
+{% extends "admin/change_form.html" %}
+{% load admin_urls %}
+
+{% block change_form_before %}
+    {% if original %}
+        <a href="{% url 'admin:quizzadmin_gamestep_add' %}?game={{ original.pk }}" class="button bg-blue-600 text-white px-4 py-2 rounded mb-4 inline-block">
+            Добавить шаг
+        </a>
+    {% else %}
+        <a href="#" class="button bg-blue-600 text-white px-4 py-2 rounded mb-4 inline-block opacity-50 cursor-not-allowed" tabindex="-1" aria-disabled="true">
+            Добавить шаг
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block form_before %}
+    {% if original %}
+    <div class="mb-8">
+        <h2 class="text-xl font-bold mb-4">Шаги игры</h2>
+        <table class="w-full bg-base-800 rounded text-left mb-6">
+            <thead>
+                <tr class="text-base-200 border-b border-base-700">
+                    <th class="px-4 py-2">№</th>
+                    <th class="px-4 py-2">Тип</th>
+                    <th class="px-4 py-2">Вопрос/Текст</th>
+                    <th class="px-4 py-2">Варианты/Ответ</th>
+                    <th class="px-4 py-2">Баллы</th>
+                    <th class="px-4 py-2">Ограничение (сек)</th>
+                    <th class="px-4 py-2">Переход вручную</th>
+                    <th class="px-4 py-2">Дополнительно</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for step in original.steps.all|dictsort:'order' %}
+                <tr>
+                    <td class="px-4 py-2">{{ forloop.counter }}</td>
+                    <td class="px-4 py-2">{{ step.get_type_display }}</td>
+                    <td class="px-4 py-2">{{ step.open_question|default:step.options.open_question|default:'' }}</td>
+                    <td class="px-4 py-2">
+                        {% if step.open_answer %}{{ step.open_answer }}{% elif step.options.answer %}{{ step.options.answer }}{% elif step.options.choices %}
+                            {% for choice in step.options.choices %}{{ forloop.counter }}. {{ choice }}<br>{% endfor %}
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-2">{{ step.score|default:step.options.score|default:'' }}</td>
+                    <td class="px-4 py-2">{{ step.time_limit|default:step.options.time_limit|default:'' }}</td>
+                    <td class="px-4 py-2">{% if step.isManualTransition or step.options.isManualTransition %}Да{% else %}Нет{% endif %}</td>
+                    <td class="px-4 py-2">
+                        {% for key, value in step.options.items %}
+                            {% if key not in ['open_question','answer','choices','score','time_limit','isManualTransition'] %}
+                                <b>{{ key|capfirst }}:</b> {{ value }}<br>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="8" class="px-4 py-2">Нет шагов</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+        <a href="{% url gamestep_opts|admin_urlname:'add' %}?game={{ original.pk }}" class="button bg-blue-600 text-white px-4 py-2 rounded mb-4 inline-flex items-center gap-2">
+            <span class="material-symbols-outlined" style="font-size: 20px; vertical-align: middle;">add</span>
+            Добавить шаг
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block content_before %}
+{% endblock %} 

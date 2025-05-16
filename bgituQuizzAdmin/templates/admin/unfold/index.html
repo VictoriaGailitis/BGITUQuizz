@@ -1,0 +1,126 @@
+{% extends 'admin/base.html' %}
+{% load i18n admin_urls %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+    {% include "unfold/helpers/site_branding.html" %}
+{% endblock %}
+
+{% block content %}
+    <div class="flex flex-col gap-8 w-full">
+        <div class="w-full">
+            <h1 class="text-2xl font-bold mb-4">Все игры</h1>
+            <a href="{% url opts|admin_urlname:'add' %}" class="button bg-blue-600 text-white px-4 py-2 rounded mb-4 inline-block">Добавить игру</a>
+            <div class="overflow-x-auto w-full">
+                <table class="w-full bg-base-800 rounded text-left">
+                    <thead>
+                        <tr class="text-base-200 border-b border-base-700">
+                            <th class="px-4 py-2">Название</th>
+                            <th class="px-4 py-2">Дата создания</th>
+                            <th class="px-4 py-2">Шагов</th>
+                            <th class="px-4 py-2">Последний шаг</th>
+                            <th class="px-4 py-2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for game in games %}
+                            <tr class="hover:bg-base-700 transition">
+                                <td class="px-4 py-2">
+                                    <a href="{% url opts|admin_urlname:'change' game.id %}"
+                                       class="font-bold text-blue-400 hover:text-blue-300 underline-offset-4 hover:underline transition"
+                                    >
+                                        {{ game.name }}
+                                    </a>
+                                </td>
+                                <td class="px-4 py-2">{{ game.createdAt|date:'d.m.Y H:i' }}</td>
+                                <td class="px-4 py-2">{{ game.steps_count }}</td>
+                                <td class="px-4 py-2">{% if game.last_step_date %}{{ game.last_step_date|date:'d.m.Y H:i' }}{% else %}-{% endif %}</td>
+                                <td class="px-4 py-2">
+                                    <a href="{% url opts|admin_urlname:'change' game.id %}"
+                                       class="button bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition"
+                                    >Открыть</a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr><td colspan="5" class="px-4 py-2">Нет созданных игр</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="w-full">
+            <h2 class="text-xl font-bold mb-2">Обратная связь по категориям</h2>
+            <div style="max-width: 700px; background: #181a29; border-radius: 12px; padding: 32px;">
+                <canvas id="feedback-sentiment-chart" width="600" height="340"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script>
+        // prettier-ignore
+        var sentimentLabels = {{ sentiment_labels|safe }};
+        // prettier-ignore
+        var sentimentData = {{ sentiment_data|safe }};
+        function renderFeedbackChart() {
+            var ctx = document.getElementById('feedback-sentiment-chart').getContext('2d');
+            if (window.Chart && window.ChartDataLabels) {
+                window.Chart.register(window.ChartDataLabels);
+            }
+            var data = {
+                labels: sentimentLabels,
+                datasets: [{
+                    data: sentimentData,
+                    backgroundColor: ['#10b981', '#eab308', '#ef4444', '#64748b', '#2563eb', '#f472b6', '#f59e42'],
+                }]
+            };
+            var config = {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: false,
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: {
+                            color: '#fff',
+                            font: { weight: 'bold', size: 22 },
+                            anchor: 'end',
+                            align: 'start',
+                            formatter: function(value, context) {
+                                return value;
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Категория', font: { size: 20, weight: 'bold' }, color: '#fff' },
+                            ticks: { font: { size: 20, weight: 'bold' }, color: '#fff' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Количество', font: { size: 20, weight: 'bold' }, color: '#fff' },
+                            ticks: { font: { size: 20, weight: 'bold' }, color: '#fff' }
+                        }
+                    }
+                },
+                plugins: [window.ChartDataLabels]
+            };
+            new window.Chart(ctx, config);
+        }
+        window.addEventListener('load', function() {
+            if (window.Chart && window.ChartDataLabels) {
+                renderFeedbackChart();
+            } else {
+                var interval = setInterval(function() {
+                    if (window.Chart && window.ChartDataLabels) {
+                        clearInterval(interval);
+                        renderFeedbackChart();
+                    }
+                }, 100);
+            }
+        });
+    </script>
+{% endblock %} 

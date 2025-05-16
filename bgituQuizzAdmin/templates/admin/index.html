@@ -1,0 +1,92 @@
+{% extends 'admin/base.html' %}
+{% load i18n %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+    {% include "unfold/helpers/site_branding.html" %}
+{% endblock %}
+
+{% block content %}
+    <div class="flex flex-col gap-8">
+        <div>
+            <h1 class="text-2xl font-bold mb-4">Все игры</h1>
+            <a href="{% url 'admin:quizzadmin_game_add' %}" class="button bg-blue-600 text-white px-4 py-2 rounded mb-4 inline-block">Добавить игру</a>
+            <ul class="bg-base-800 rounded p-4">
+                {% for game in games %}
+                    <li class="mb-2">
+                        <a href="{% url 'admin:quizzadmin_game_change' game.id %}" class="text-blue-400 hover:underline">{{ game.name }}</a>
+                        <span class="text-gray-400 ml-2">({{ game.createdAt|date:'d.m.Y H:i' }})</span>
+                    </li>
+                {% empty %}
+                    <li>Нет созданных игр</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div>
+            <h2 class="text-xl font-bold mb-2">Обратная связь по категориям</h2>
+            <div style="max-width: 420px; background: #181a29; border-radius: 12px; padding: 24px;">
+                <canvas id="feedback-sentiment-chart" width="380" height="220"></canvas>
+            </div>
+        </div>
+        <div>
+            {% include "unfold/helpers/app_list_default.html" %}
+        </div>
+        <div>
+            {% include "unfold/helpers/history.html" %}
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script>
+        function renderFeedbackChart() {
+            var ctx = document.getElementById('feedback-sentiment-chart').getContext('2d');
+            if (window.Chart && window.ChartDataLabels) {
+                window.Chart.register(window.ChartDataLabels);
+            }
+            var data = {
+                labels: ['Положительные', 'Нейтрально', 'Негативные', 'Не опознано'],
+                datasets: [{
+                    data: [12, 5, 3, 2],
+                    backgroundColor: ['#10b981', '#eab308', '#ef4444', '#64748b'],
+                }]
+            };
+            var config = {
+                type: 'pie',
+                data: data,
+                options: {
+                    responsive: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: { font: { size: 16 } }
+                        },
+                        datalabels: {
+                            color: '#fff',
+                            font: { weight: 'bold', size: 16 },
+                            formatter: function(value, context) {
+                                return value;
+                            }
+                        }
+                    }
+                },
+                plugins: [window.ChartDataLabels]
+            };
+            new window.Chart(ctx, config);
+        }
+        window.addEventListener('load', function() {
+            if (window.Chart && window.ChartDataLabels) {
+                renderFeedbackChart();
+            } else {
+                var interval = setInterval(function() {
+                    if (window.Chart && window.ChartDataLabels) {
+                        clearInterval(interval);
+                        renderFeedbackChart();
+                    }
+                }, 100);
+            }
+        });
+    </script>
+{% endblock %} 

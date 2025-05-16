@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+body {
+    font-family: "Open Sans", sans-serif;
+    background: #f3f4f6;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.swal-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.swal-content {
+    display: flex;
+    justify-content: center;
+}
+
+ul {
+    padding-inline-start: 0;
+    margin: 2rem;
+}
+
+ul:empty::after {
+    content: "Пока еще нет игроков!"
+}
+
+.loader {
+    border: 8px solid #e5e7eb;
+    border-top: 8px solid #3b82f6;
+    border-radius: 50%;
+    width: 96px;
+    height: 96px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1.5rem;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#app {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 1.25rem;
+    box-shadow: 0 4px 32px 0 rgba(0,0,0,0.10);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.timer {
+    font-size: 2rem;
+    font-family: monospace;
+    color: #374151;
+    margin: 0.5rem 0 1rem 0;
+    text-align: center;
+}
+
+.btn {
+    margin-top: 1.5rem;
+    padding: 0.75rem 2rem;
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn:hover {
+    background: #2563eb;
+}
+
+.img {
+    max-width: 100%;
+    border-radius: 1rem;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.08);
+    margin-bottom: 1.5rem;
+}
+
+ul.score-list {
+    margin: 1.5rem 0;
+    padding: 0;
+    list-style: none;
+}
+
+ul.score-list li {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
