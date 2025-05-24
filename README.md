@@ -40,8 +40,7 @@
 
 ## Видео демонстрация проекта
 
-![https://disk.360.yandex.ru/i/RxbDO6-6ADEKxg] (Ссылка на Яндекс.Диск)
-
+![Ссылка на Яндекс.Диск](https://disk.360.yandex.ru/i/RxbDO6-6ADEKxg)
 
 ---
 
